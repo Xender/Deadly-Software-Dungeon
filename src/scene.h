@@ -17,7 +17,7 @@ class Scene : public sf::Drawable
 
 	static constexpr float player_size = 0.6f;
 	sf::CircleShape player;
-	static constexpr float player_speed_tiles_per_ms = 0.03f;
+	static constexpr float player_speed_tiles_per_ms = 0.01f; // TODO Value of 0.03 causes glitches in collision detection
 
 	void generate_bg_text(sf::Vector2f size);
 	void move_player(sf::Vector2f ds);

@@ -86,19 +86,19 @@ void Scene::move_player(sf::Vector2f ds)
 {
 	player.move(ds);
 	sf::Vector2f pos = player.getPosition();
-	size_t x = size_t(pos.x), y = size_t(pos.y), x_1 = x+player_size, y_1 = y+player_size;
+	size_t x_left = pos.x, y_top = pos.y, x_right = pos.x+player_size, y_bottom = pos.y+player_size;
 
-	if(map[x][y] == Tile::WALL || map[x][y_1] == Tile::WALL)
-		pos.x = x_1;
+	if(map[x_left][y_top] == Tile::WALL && map[x_left][y_bottom] == Tile::WALL)
+		pos.x = x_left+1;
 
-	if(map[x][y] == Tile::WALL || map[x_1][y] == Tile::WALL)
-		pos.y = y_1;
+	if(map[x_left][y_top] == Tile::WALL && map[x_right][y_top] == Tile::WALL)
+		pos.y = y_top+1;
 
-	if(map[x_1][y] == Tile::WALL || map[x_1][y_1] == Tile::WALL)
-		pos.x = x;
+	if(map[x_right][y_top] == Tile::WALL && map[x_right][y_bottom] == Tile::WALL)
+		pos.x = x_right-player_size;
 
-	if(map[x][y_1] == Tile::WALL || map[x_1][y_1] == Tile::WALL)
-		pos.y = y;
+	if(map[x_left][y_bottom] == Tile::WALL && map[x_right][y_bottom] == Tile::WALL)
+		pos.y = y_bottom-player_size;
 
 	player.setPosition(pos);
 }
