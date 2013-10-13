@@ -11,6 +11,7 @@ class Scene : public sf::Drawable
 	std::string bg_text_str;
 	bool update_text;
 
+	static constexpr unsigned TILE_SIZE = 48;
 	static constexpr std::size_t MAP_W = 200, MAP_H = 200;
 	Map map;
 

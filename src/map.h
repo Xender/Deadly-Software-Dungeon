@@ -14,13 +14,11 @@ class Map : public Arr2d<Tile>, public sf::Drawable
 	sf::RectangleShape proto_wall_shape;
 
 public:
-	static const unsigned TILE_SIZE = 48;
-
 	Map(std::size_t width, std::size_t height)
 	: Arr2d<Tile>(width, height)
 	{
 		proto_wall_shape.setFillColor(sf::Color::Black);
-		proto_wall_shape.setSize({float(TILE_SIZE), float(TILE_SIZE)});
+		proto_wall_shape.setSize({1, 1});
 	}
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

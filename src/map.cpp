@@ -9,7 +9,7 @@ void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		for(std::size_t y = 0; y < height; ++y)
 			if((*this)[x][y] == Tile::FLOOR)
 			{
-				wall_shape.setPosition(x * TILE_SIZE, y * TILE_SIZE);
+				wall_shape.setPosition(x, y);
 				target.draw(wall_shape, states);
 			}
 }

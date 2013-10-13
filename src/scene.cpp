@@ -58,16 +58,15 @@ void Scene::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	//-------------------------------------------------------------------------------
 	view.setCenter(
 		//sf::Vector2f(sf::Vector2i(
-			player.getPosition() * float(Map::TILE_SIZE)
+			player.getPosition() * float(TILE_SIZE)
 			/*)) + sf::Vector2f{0.0f, 0.5f}*/);
 	target.setView(view);
 
 	// sf::Rect<float> viewport = view.getViewport();
 	// bg_text.setPosition(viewport.left, viewport.top);
 
+	states.transform.scale({TILE_SIZE, TILE_SIZE});
 	target.draw(map, states);
-
-	states.transform.scale({Map::TILE_SIZE, Map::TILE_SIZE});
 	target.draw(player, states);
 }
 
