@@ -22,8 +22,9 @@ int main(/*int argc, const char *argv[]*/)
 					window.setView(sf::View({0, 0, float(ev.size.width), float(ev.size.height)}));
 
 				default:
-					scene.handle_event(ev);
+					break;
 			}
+			scene.handle_event(ev);
 		}
 
 		sf::Time scene_fixed_dt = sf::milliseconds(Scene::fixed_dt_ms);
@@ -32,7 +33,7 @@ int main(/*int argc, const char *argv[]*/)
 			scene.update();
 		}
 
-		scene.pre_draw();
+		scene.pre_draw(window);
 
 		window.clear(sf::Color::Black);
 		window.draw(scene);

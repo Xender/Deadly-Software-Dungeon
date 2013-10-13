@@ -5,27 +5,26 @@
 Scene scene;
 
 Scene::Scene()
-: map(MAP_W, MAP_H)
+: update_text(true)
+, map(MAP_W, MAP_H)
 , player(player_size/2)
 {
 	bg_text_font.loadFromFile("sazanami-gothic.ttf");
 
-	generate_bg_text();
-
 	bg_text.setFont(bg_text_font);
-	bg_text.setCharacterSize(16);
+	bg_text.setCharacterSize(FONT_SIZE_PX);
 	bg_text.setColor(sf::Color::Red);
 
 	player.setFillColor(sf::Color::Green);
 	player.setPosition( sf::Vector2f(map.generate()) );
 }
 
-void Scene::generate_bg_text()
+void Scene::generate_bg_text(sf::Vector2f size)
 {
 	bg_text_str.clear();
-	for(int i = 48; i--;)
+	for(int i = size.y/19 +1; i--;) //TODO MAGIC_NUMBERS values hardcoded for 16px Sazanami Gothic font
 	{
-		for(int i = 64; i--;)
+		for(int i = size.x/24 +1; i--;) //TODO MAGIC_NUMBERS values hardcoded for 16px Sazanami Gothic font
 		{
 			unsigned r = rand();
 			bg_text_str += "0123456789ABCDEF"[r & 0xf];
@@ -41,10 +40,10 @@ void Scene::generate_bg_text()
 	update_text = false;
 }
 
-void Scene::pre_draw()
+void Scene::pre_draw(sf::RenderTarget& target)
 {
 	if(update_text)
-		generate_bg_text();
+		generate_bg_text(target.getView().getSize());
 }
 
 void Scene::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -74,7 +73,14 @@ void Scene::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Scene::handle_event(sf::Event& ev)
 {
+	switch(ev.type)
+	{
+		case sf::Event::Resized:
+			generate_bg_text({float(ev.size.width), float(ev.size.height)});
 
+		default:
+			break;
+	}
 }
 
 void Scene::move_player(sf::Vector2f ds)

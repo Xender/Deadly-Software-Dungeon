@@ -5,6 +5,7 @@
 
 class Scene : public sf::Drawable
 {
+	static constexpr unsigned FONT_SIZE_PX = 16;
 	sf::Font bg_text_font;
 	sf::Text bg_text;
 	std::string bg_text_str;
@@ -17,7 +18,7 @@ class Scene : public sf::Drawable
 	sf::CircleShape player;
 	static constexpr float player_speed_tiles_per_ms = 0.03f;
 
-	void generate_bg_text();
+	void generate_bg_text(sf::Vector2f size);
 	void move_player(sf::Vector2f ds);
 
 public:
@@ -27,7 +28,7 @@ public:
 
 	void handle_event(sf::Event& ev);
 	void update();
-	void pre_draw();
+	void pre_draw(sf::RenderTarget& target);
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 };
 
