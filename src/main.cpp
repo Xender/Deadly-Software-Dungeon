@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "scene.h"
+#include "scenes/play.h"
 
 int main(/*int argc, const char *argv[]*/)
 {
