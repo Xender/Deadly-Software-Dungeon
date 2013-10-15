@@ -2,6 +2,7 @@
 
 #include "arr2d.h"
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 enum class Tile : unsigned char
 {
@@ -23,6 +24,6 @@ public:
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
-	// Returns point that for sure is floor
-	sf::Vector2u generate(unsigned iterations = 10000);
+	// Returns vector of <num_stops> coordinates of floor tiles, uniformly encountered.
+	std::vector<sf::Vector2u> generate(unsigned iterations, unsigned num_stops);
 };

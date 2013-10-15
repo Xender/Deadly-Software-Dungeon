@@ -9,14 +9,41 @@ Scene::Scene()
 , map(MAP_W, MAP_H)
 , player(player_size/2)
 {
-	bg_text_font.loadFromFile("sazanami-gothic.ttf");
+	// Load assets
+	bg_text_font.loadFromFile("assets/sazanami-gothic.ttf");
+	patch_tex.loadFromFile("assets/patch.png");
+	bug_tex.loadFromFile("assets/beetle.png");
 
+	// Visual properties
 	bg_text.setFont(bg_text_font);
 	bg_text.setCharacterSize(FONT_SIZE_PX);
 	bg_text.setColor(sf::Color::Red);
 
 	player.setFillColor(sf::Color::Green);
-	player.setPosition( sf::Vector2f(map.generate()) );
+
+	//Generation
+	std::vector<sf::Vector2u> item_locations = map.generate(10000, NUM_PATCHES +1); // +1 for player
+
+	player.setPosition( sf::Vector2f(item_locations.back()) ); // Place player at the end of generated path...
+	item_locations.pop_back();
+
+	patches.reserve(item_locations.size()); // ...and items in regular intervals on path
+	for(const sf::Vector2u& loc: item_locations) //TODO ENTITIES_ALLOCATION refactor copypaste
+	{
+		patches.emplace_back(patch_tex);
+		sf::Sprite& patch = patches.back();
+		patch.setPosition(sf::Vector2f(loc));
+		patch.setScale(1.0f/patch.getLocalBounds().width, 1.0f/patch.getLocalBounds().height);
+	}
+
+	bugs.reserve(NUM_BUGS);
+	for(size_t i = 0; i < NUM_BUGS; ++i) //TODO ENTITIES_ALLOCATION refactor copypaste
+	{
+		bugs.emplace_back(bug_tex, sf::IntRect(0, 0, 48, 48)); //TODO HARDCODED hardcoded bug texture tile size
+		sf::Sprite& bug = bugs.back();
+		bug.setPosition(rand() % MAP_W, rand() % MAP_H);
+		bug.setScale(1.0f/bug.getLocalBounds().width, 1.0f/bug.getLocalBounds().height);
+	}
 }
 
 void Scene::generate_bg_text(sf::Vector2f size)
@@ -48,6 +75,7 @@ void Scene::pre_draw(sf::RenderTarget& target)
 
 void Scene::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	// Background text
 	sf::View view = target.getView();
 	sf::Vector2f size = view.getSize();
 	view.reset({0, 0, size.x, size.y});
@@ -55,19 +83,20 @@ void Scene::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.setView(view);
 	target.draw(bg_text, states);
 
-	//-------------------------------------------------------------------------------
-	view.setCenter(
-		//sf::Vector2f(sf::Vector2i(
-			player.getPosition() * float(TILE_SIZE)
-			/*)) + sf::Vector2f{0.0f, 0.5f}*/);
+	// Main scene
+	view.setCenter(player.getPosition() * float(TILE_SIZE));
 	target.setView(view);
-
-	// sf::Rect<float> viewport = view.getViewport();
-	// bg_text.setPosition(viewport.left, viewport.top);
-
 	states.transform.scale({TILE_SIZE, TILE_SIZE});
+
 	target.draw(map, states);
+
+	for(const sf::Sprite& patch: patches)
+		target.draw(patch, states);
+
 	target.draw(player, states);
+
+	for(const sf::Sprite& bug: bugs)
+		target.draw(bug, states);
 }
 
 void Scene::handle_event(sf::Event& ev)
@@ -101,7 +130,30 @@ void Scene::move_player(sf::Vector2f ds)
 		pos.y = y_bottom-player_size;
 
 	player.setPosition(pos);
+
+	const sf::FloatRect& player_bb = player.getGlobalBounds();
+	for(auto it = patches.begin(); it != patches.end(); )
+	{
+		if( player_bb.intersects(it->getGlobalBounds()) )
+		{
+			*it = patches.back();
+			patches.pop_back();
+
+			// collect_patch();
+			// win
+		}
+		else
+			++it;
+	}
 }
+
+// void Scene::collect_patch()
+// {
+// 	if(patches.empty())
+// 	{
+// 		//TODO win
+// 	}
+// }
 
 void Scene::update()
 {
@@ -134,6 +186,30 @@ void Scene::update()
 			update_text = true;
 		}
 	}
-}
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//TODO refactor
+	static int steps_to_bug_move = 0;
+	const sf::FloatRect& player_bb = player.getGlobalBounds();
+
+	if(steps_to_bug_move++ == 3)
+	{
+		steps_to_bug_move = 0;
+
+		for(sf::Sprite& bug: bugs)
+		{
+			int direction = rand() % 4;
+			switch(direction)
+			{
+				case 0: bug.move({ 0,  1}); break;
+				case 1: bug.move({ 0, -1}); break;
+				case 2: bug.move({ 1,  0}); break;
+				case 3: bug.move({-1,  0}); break;
+			}
+
+			if( player_bb.intersects(bug.getGlobalBounds()) )
+			{
+				// lose
+			}
+		}
+	}
+}
