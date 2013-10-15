@@ -140,21 +140,23 @@ void PlayScene::move_player(sf::Vector2f ds)
 			*it = patches.back();
 			patches.pop_back();
 
-			// collect_patch();
-			// win
+			collect_patch();
 		}
 		else
 			++it;
 	}
 }
 
-// void Scene::collect_patch()
-// {
-// 	if(patches.empty())
-// 	{
-// 		//TODO win
-// 	}
-// }
+void PlayScene::collect_patch()
+{
+	if(patches.empty())
+	{
+		// win
+		game_over_scene.text.setColor(sf::Color::Green);
+		game_over_scene.text.setString("You win!\nMerge successful.");
+		current_scene = &game_over_scene;
+	}
+}
 
 void PlayScene::update()
 {
@@ -210,6 +212,9 @@ void PlayScene::update()
 			if( player_bb.intersects(bug.getGlobalBounds()) )
 			{
 				// lose
+				game_over_scene.text.setColor(sf::Color::Red);
+				game_over_scene.text.setString("You lost against bugs :(");
+				current_scene = &game_over_scene;
 			}
 		}
 	}

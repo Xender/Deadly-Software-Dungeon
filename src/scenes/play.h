@@ -30,7 +30,7 @@ class PlayScene : public Scene
 
 	void generate_bg_text(sf::Vector2f size);
 	void move_player(sf::Vector2f ds);
-	// void collect_patch();
+	void collect_patch();
 
 public:
 	PlayScene();
