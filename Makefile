@@ -1,26 +1,32 @@
-# e15bd0ead5c4a4b3e594b920047f4d4c
+# 30b16e4f1be665665db5b40c723e41ae
 CFLAGS=-O$(O) -std=c++11
 O=2
 LFLAGS=-l sfml-graphics -l sfml-window -l sfml-system
-OBJS=objs/main.o objs/map.o objs/scene.o
+OBJS=objs/map.o objs/main.o objs/gameover.o objs/play.o
 
 
 .PHONY: all
-all: objs a.out
+all: objs DSD
 
-./a.out: $(OBJS)
-	@ echo "    LINK ./a.out"
-	@ $(CXX) $(OBJS) -o "./a.out" $(LFLAGS)
+./DSD: $(OBJS)
+	@ echo "    LINK ./DSD"
+	@ $(CXX) $(OBJS) -o "./DSD" $(LFLAGS)
 
-objs/main.o: src/main.cpp src/scene.h src/map.h src/arr2d.h
-	@ echo "    CXX  src/main.cpp"
-	@ $(CXX) $(CFLAGS) -c "src/main.cpp" -o $@
 objs/map.o: src/map.cpp src/map.h src/arr2d.h
 	@ echo "    CXX  src/map.cpp"
 	@ $(CXX) $(CFLAGS) -c "src/map.cpp" -o $@
-objs/scene.o: src/scene.cpp src/scene.h src/map.h src/arr2d.h
-	@ echo "    CXX  src/scene.cpp"
-	@ $(CXX) $(CFLAGS) -c "src/scene.cpp" -o $@
+objs/main.o: src/main.cpp src/scene.h src/scenes/play.h src/scenes/../map.h \
+ src/scenes/../arr2d.h
+	@ echo "    CXX  src/main.cpp"
+	@ $(CXX) $(CFLAGS) -c "src/main.cpp" -o $@
+objs/gameover.o: src/scenes/gameover.cpp src/scenes/gameover.h \
+ src/scenes/../scene.h
+	@ echo "    CXX  src/scenes/gameover.cpp"
+	@ $(CXX) $(CFLAGS) -c "src/scenes/gameover.cpp" -o $@
+objs/play.o: src/scenes/play.cpp src/scenes/play.h src/scenes/../scene.h \
+ src/scenes/../map.h src/scenes/../arr2d.h src/scenes/gameover.h
+	@ echo "    CXX  src/scenes/play.cpp"
+	@ $(CXX) $(CFLAGS) -c "src/scenes/play.cpp" -o $@
 
 objs:
 	@ mkdir "objs"
@@ -28,7 +34,7 @@ objs:
 c: clean
 clean:
 	@ if [ -d "objs" ]; then rm -r "objs"; fi
-	@ rm -f "./a.out"
+	@ rm -f "./DSD"
 	@ echo "    CLEAN"
 .PHONY: f fresh
 f: fresh
@@ -37,7 +43,7 @@ fresh: clean
 .PHONY: r run
 r: run
 run: all
-	@ ././a.out
+	@ ././DSD
 
 .PHONY: d debug
 d: debug

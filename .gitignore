@@ -1,2 +1,9 @@
+DSD.sublime-project
+DSD.sublime-workspace
+
 *.o
-a.out
+DSD
+
+build-windows/assets
+build-windows/*.dll
+build-windows/DSD.exe
