@@ -1,10 +1,11 @@
 #include "play.h"
+#include "gameover.h"
 
 #include <cmath>
 
-Scene scene;
+PlayScene play_scene;
 
-Scene::Scene()
+PlayScene::PlayScene()
 : update_text(true)
 , map(MAP_W, MAP_H)
 , player(player_size/2)
@@ -46,7 +47,7 @@ Scene::Scene()
 	}
 }
 
-void Scene::generate_bg_text(sf::Vector2f size)
+void PlayScene::generate_bg_text(sf::Vector2f size)
 {
 	bg_text_str.clear();
 	for(int i = size.y/19 +1; i--;) //TODO MAGIC_NUMBERS values hardcoded for 16px Sazanami Gothic font
@@ -67,13 +68,13 @@ void Scene::generate_bg_text(sf::Vector2f size)
 	update_text = false;
 }
 
-void Scene::pre_draw(sf::RenderTarget& target)
+void PlayScene::pre_draw(sf::RenderTarget& target)
 {
 	if(update_text)
 		generate_bg_text(target.getView().getSize());
 }
 
-void Scene::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void PlayScene::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	// Background text
 	sf::View view = target.getView();
@@ -99,7 +100,7 @@ void Scene::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		target.draw(bug, states);
 }
 
-void Scene::handle_event(sf::Event& ev)
+void PlayScene::handle_event(sf::Event& ev)
 {
 	switch(ev.type)
 	{
@@ -111,7 +112,7 @@ void Scene::handle_event(sf::Event& ev)
 	}
 }
 
-void Scene::move_player(sf::Vector2f ds)
+void PlayScene::move_player(sf::Vector2f ds)
 {
 	player.move(ds);
 	sf::Vector2f pos = player.getPosition();
@@ -155,7 +156,7 @@ void Scene::move_player(sf::Vector2f ds)
 // 	}
 // }
 
-void Scene::update()
+void PlayScene::update()
 {
 	struct Movement
 	{

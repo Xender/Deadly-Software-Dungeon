@@ -1,9 +1,10 @@
 #pragma once
 
+#include "../scene.h"
 #include "../map.h"
 #include <SFML/Graphics.hpp>
 
-class Scene : public sf::Drawable
+class PlayScene : public Scene
 {
 	static constexpr unsigned FONT_SIZE_PX = 16;
 	sf::Font bg_text_font;
@@ -32,9 +33,7 @@ class Scene : public sf::Drawable
 	// void collect_patch();
 
 public:
-	static constexpr unsigned fixed_dt_ms = 20;
-
-	Scene();
+	PlayScene();
 
 	void handle_event(sf::Event& ev);
 	void update();
@@ -42,4 +41,4 @@ public:
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 };
 
-extern Scene scene;
+extern PlayScene play_scene;

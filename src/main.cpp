@@ -1,8 +1,13 @@
 #include <SFML/Graphics.hpp>
+#include "scene.h"
 #include "scenes/play.h"
+
+Scene* current_scene;
 
 int main(/*int argc, const char *argv[]*/)
 {
+	current_scene = &play_scene;
+
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Deadly Software Dungeon");
 	sf::Clock timer;
 	sf::Time accum;
@@ -24,19 +29,19 @@ int main(/*int argc, const char *argv[]*/)
 				default:
 					break;
 			}
-			scene.handle_event(ev);
+			current_scene->handle_event(ev);
 		}
 
 		sf::Time scene_fixed_dt = sf::milliseconds(Scene::fixed_dt_ms);
 		for(accum += timer.restart(); accum > scene_fixed_dt; accum -= scene_fixed_dt)
 		{
-			scene.update();
+			current_scene->update();
 		}
 
-		scene.pre_draw(window);
+		current_scene->pre_draw(window);
 
 		window.clear(sf::Color::Black);
-		window.draw(scene);
+		window.draw(*current_scene);
 		window.display();
 	}
 
