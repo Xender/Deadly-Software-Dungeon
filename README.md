@@ -3,7 +3,7 @@ Deadly-Software-Dungeon
 
 A little game in SFML ;)
 
-- Explore the Dungeon od Hexdump!
+- Explore the Dungeons of Hexdump!
 - Fight with bugs!
 - Apply patches to win!
 
